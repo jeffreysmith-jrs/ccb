@@ -31,10 +31,10 @@ def tempSave(dpi=None, facecolor='w', edgecolor='w',
 	
 	
 	#Pass arguements to plt.savefig command
-	dpi			=	dpi			or 	None
+	dpi		=	dpi		or 	None
 	facecolor	=	facecolor	or	'w'	
 	edgecolor	=	edgecolor	or	'w'
-	orientation	=	orientation or 	'portrait' 
+	orientation	=	orientation 	or 	'portrait' 
 	papertype	=	papertype	or	None
 	format		=	format		or	None
 	transparent	=	transparent	or	False
