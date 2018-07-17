@@ -1,4 +1,5 @@
 #Function creates a temporary directory and keeps python graphs there
+#Use this just like you use plt.savefig() except no need to add a name
 #Jeffrey R. Smith
 #July 17, 2018
 
