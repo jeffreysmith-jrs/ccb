@@ -30,19 +30,6 @@ def tempSave(dpi=None, facecolor='w', edgecolor='w',
 	#Save graph with temporary name
 	fname		=	str(tempDirectory + str(time.time()) + extension)
 	
-	
-	#Pass arguements to plt.savefig command
-	dpi		=	dpi		or 	None
-	facecolor	=	facecolor	or	'w'	
-	edgecolor	=	edgecolor	or	'w'
-	orientation	=	orientation 	or 	'portrait' 
-	papertype	=	papertype	or	None
-	format		=	format		or	None
-	transparent	=	transparent	or	False
-	bbox_inches	=	bbox_inches	or	None
-	pad_inches	=	pad_inches	or	0.1
-	frameon		=	frameon		or	None
-	
 	#Save figure command
 	plt.savefig(fname, dpi=dpi, facecolor=facecolor, edgecolor=edgecolor,
         orientation=orientation, papertype=papertype, format=format,
