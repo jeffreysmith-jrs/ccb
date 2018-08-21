@@ -17,7 +17,7 @@ def postMaxent(outputDirectory, species):
 	for t in range(len(species)):
 		species	=	str(species[t])
 
-		species	= 'Turdus_grayi'
+		
 		#Read in maxent HTML
 		htmlFile		=	codecs.open(str(outputDirectory + species + '.html'), 'r')
 		maxentHTML		=	 htmlFile.read()
