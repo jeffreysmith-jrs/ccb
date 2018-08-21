@@ -1,6 +1,6 @@
 #Reads in a Maxent summary file and generates the SDM graph (working-ish)
 #Jeffrey Smith
-#August 20,2018
+#August 21,2018
 
 #Import libraries
 import os, codecs
@@ -17,7 +17,7 @@ def postMaxent(outputDirectory, species):
 	for t in range(len(species)):
 		species	=	str(species[t])
 
-		
+
 		#Read in maxent HTML
 		htmlFile		=	codecs.open(str(outputDirectory + species + '.html'), 'r')
 		maxentHTML		=	 htmlFile.read()
@@ -28,26 +28,35 @@ def postMaxent(outputDirectory, species):
 		batchLineCommand	=	batchLineCommand.replace('<br>', ' ') #End on a space
 
 
-		#Figure out where in the string things start and extract relevatn information
+		#Figure out where in the string things start and extract relevant information
 		startSamples 		=	batchLineCommand.find('samplesfile') + 12
 		endSamples			=	batchLineCommand[startSamples:].find(' ') + startSamples
 		samplesFile			=	batchLineCommand[startSamples:endSamples]
 
+		#Get environmental layers used to make the maxent model
 		startEnv			=	batchLineCommand.find('environmentallayers') + 20 
 		endEnv				=	batchLineCommand[startEnv:].find(' ') + startEnv
 		inputAsciis			=	batchLineCommand[startEnv:endEnv]
 
+		#Deal with replicated runs
 		startReplicates		=	batchLineCommand.find('replicates') + 11 
-		endReplicates		=	batchLineCommand[startReplicates:].find(' ')
-		if endReplicates > 0:
-			endReplicates	=	endReplicates + startReplicates
-		else:
-			endReplicates		=	batchLineCommand[startReplicates:].find(' ') + startReplicates
-
-
+		if startReplicates != 10:
 		
-		replicates			=	int(batchLineCommand[startReplicates:endReplicates])
+			#This became an issue if replicates was the last thing listed in the command line
+			#So I had to add to search for either the next space or the line break
+			endReplicates		=	batchLineCommand[startReplicates:].find(' ')
+			if endReplicates > 0:
+				endReplicates	=	endReplicates + startReplicates
+			else:
+				endReplicates		=	batchLineCommand[startReplicates:].find(' ') + startReplicates
 
+
+			
+			replicates			=	int(batchLineCommand[startReplicates:endReplicates])
+		
+		#Unreplicated runs
+		else:
+			replicates = 1
 
 		#Figure out which, if any asciis were excluded from analysis
 		toExclude			=	batchLineCommand
@@ -81,10 +90,13 @@ def postMaxent(outputDirectory, species):
 			fx	=	fx.astype(np.float64)
 					
 			#Read in lambdas file from maxent
-			fname		=	str(outputDirectory + species + '_' + str(k) + '.lambdas')
+			
+			if replicates > 1:
+				fname		=	str(outputDirectory + species + '_' + str(k) + '.lambdas')
+			else:
+				fname		=	str(outputDirectory + species +  '.lambdas')
 			lambdas		=	pd.read_csv(fname, names = ['variable', 'lambda', 'min', 'max'], dtype = {'varaible':str})		
-
-
+			
 			#Extract constants
 			linearPredictorNormalizer	=	float(lambdas.loc[lambdas['variable'] == 'linearPredictorNormalizer']['lambda'])
 			densityNormalizer			=	float(lambdas.loc[lambdas['variable'] == 'densityNormalizer']['lambda'])
