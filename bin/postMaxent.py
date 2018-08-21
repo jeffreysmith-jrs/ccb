@@ -1,3 +1,7 @@
+#Reads in a Maxent summary file and generates the SDM graph (working-ish)
+#Jeffrey Smith
+#August 20,2018
+
 #Import libraries
 import os, codecs
 import numpy as np
@@ -13,7 +17,7 @@ def postMaxent(outputDirectory, species):
 	for t in range(len(species)):
 		species	=	str(species[t])
 
-
+		species	= 'Turdus_grayi'
 		#Read in maxent HTML
 		htmlFile		=	codecs.open(str(outputDirectory + species + '.html'), 'r')
 		maxentHTML		=	 htmlFile.read()
@@ -34,7 +38,14 @@ def postMaxent(outputDirectory, species):
 		inputAsciis			=	batchLineCommand[startEnv:endEnv]
 
 		startReplicates		=	batchLineCommand.find('replicates') + 11 
-		endReplicates		=	batchLineCommand[startReplicates:].find(' ') + startReplicates
+		endReplicates		=	batchLineCommand[startReplicates:].find(' ')
+		if endReplicates > 0:
+			endReplicates	=	endReplicates + startReplicates
+		else:
+			endReplicates		=	batchLineCommand[startReplicates:].find(' ') + startReplicates
+
+
+		
 		replicates			=	int(batchLineCommand[startReplicates:endReplicates])
 
 
